@@ -1,0 +1,10 @@
+<ul>
+    {% for article in articles %}
+      <li data-url="{{ article['url'] }}">
+        <a href="{{ article['url'] }}" target="_blank">
+          {{ article['title'] }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+  

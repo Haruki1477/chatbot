@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ニュース検索アプリ</title>
+    <style>
+        body { font-family: sans-serif; margin: 30px; }
+        h1 { color: #444; }
+        .search-form input[type="text"] {
+            padding: 5px;
+            width: 300px;
+        }
+        .search-form select {
+            padding: 5px;
+        }
+        .search-form button {
+            padding: 5px 10px;
+        }
+        .article {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: blue;
+        }
+    </style>
+    <!-- 30秒ごとに自動更新 -->
+<meta http-equiv="refresh" content="30">
+
+</head>
+<body>
+    <h1>📰 日本語ニュース検索</h1>
+    <form class="search-form" method="get" action="/">
+        <input type="text" name="q" value="{{ query }}" placeholder="キーワード（例: AI, 経済）">
+        <select name="category">
+            <option value="">-- カテゴリ選択 --</option>
+            <option value="テクノロジー" {% if category == 'テクノロジー' %}selected{% endif %}>テクノロジー</option>
+            <option value="経済" {% if category == '経済' %}selected{% endif %}>経済</option>
+            <option value="スポーツ" {% if category == 'スポーツ' %}selected{% endif %}>スポーツ</option>
+            <option value="エンタメ" {% if category == 'エンタメ' %}selected{% endif %}>エンタメ</option>
+            <option value="事件" {% if category == '事件' %}selected{% endif %}>事件</option>
+            <option value="芸能" {% if category == '芸能' %}selected{% endif %}>芸能</option>
+        </select>        
+        <button type="submit">検索</button>
+    </form>
+
+    {% if articles %}
+        {% for article in articles %}
+            <div class="article">
+                <h3>{{ article.title }}</h3>
+                <p>{{ article.description }}</p>
+                <a href="{{ article.url }}" target="_blank">▶ 記事を読む</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>該当するニュースは見つかりませんでした。</p>
+    {% endif %}
+
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="/?q={{ query }}&category={{ category }}&page={{ page - 1 }}">← 前へ</a>
+        {% endif %}
+        <span>Page {{ page }}</span>
+        {% if articles|length >= 5 %}
+            <a href="/?q={{ query }}&category={{ category }}&page={{ page + 1 }}">次へ →</a>
+        {% endif %}
+    </div>
+</body>
+</html>
